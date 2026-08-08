@@ -30,45 +30,33 @@ import au.edu.jcu.cyberpulseedu.ui.theme.CyberPulseEDUTheme
 
 class MainActivity : ComponentActivity() {
 
-    override fun onCreate(
-        savedInstanceState: Bundle?
-    ) {
-        super.onCreate(
-            savedInstanceState
-        )
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
 
         setContent {
-
             CyberPulseEDUTheme {
-
                 CyberPulseEduApp()
             }
         }
     }
 }
 
-@OptIn(
-    ExperimentalMaterial3Api::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CyberPulseEduApp() {
 
-    val navController =
-        rememberNavController()
+    val navController = rememberNavController()
 
     val navBackStackEntry by
-    navController
-        .currentBackStackEntryAsState()
+    navController.currentBackStackEntryAsState()
 
     val currentDestination =
-        navBackStackEntry
-            ?.destination
+        navBackStackEntry?.destination
 
     val currentRoute =
-        currentDestination
-            ?.route
+        currentDestination?.route
 
     val currentTitle =
         when (currentRoute) {
@@ -91,88 +79,70 @@ fun CyberPulseEduApp() {
             AppDestination.LessonDetail.route ->
                 AppDestination.LessonDetail.title
 
+            AppDestination.QuizPlay.route ->
+                AppDestination.QuizPlay.title
+
+            AppDestination.QuizResult.route ->
+                AppDestination.QuizResult.title
+
             else ->
                 "CyberPulse EDU"
         }
 
     val showBottomBar =
         bottomNavigationItems.any { item ->
-
-            item.destination.route ==
-                    currentRoute
+            item.destination.route == currentRoute
         }
 
     val showBackButton =
-        currentRoute ==
-                AppDestination.Settings.route ||
-                currentRoute ==
-                AppDestination.LessonDetail.route
+        currentRoute == AppDestination.Settings.route ||
+                currentRoute == AppDestination.LessonDetail.route ||
+                currentRoute == AppDestination.QuizPlay.route ||
+                currentRoute == AppDestination.QuizResult.route
 
     Scaffold(
-        modifier =
-            Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
 
         topBar = {
-
             TopAppBar(
-
                 title = {
-
                     Text(
-                        text =
-                            currentTitle
+                        text = currentTitle
                     )
                 },
 
                 navigationIcon = {
-
                     if (showBackButton) {
-
                         IconButton(
                             onClick = {
-                                navController
-                                    .popBackStack()
+                                navController.popBackStack()
                             }
                         ) {
-
                             Icon(
-                                imageVector =
-                                    Icons.Default.ArrowBack,
-                                contentDescription =
-                                    "Go back"
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Go back"
                             )
                         }
                     }
                 },
 
                 actions = {
-
                     if (
                         currentRoute !=
-                        AppDestination
-                            .Settings
-                            .route
+                        AppDestination.Settings.route
                     ) {
-
                         IconButton(
                             onClick = {
-
                                 navController.navigate(
-                                    AppDestination
-                                        .Settings
-                                        .route
+                                    AppDestination.Settings.route
                                 ) {
-                                    launchSingleTop =
-                                        true
+                                    launchSingleTop = true
                                 }
                             }
                         ) {
-
                             Icon(
-                                imageVector =
-                                    Icons.Default.Settings,
-                                contentDescription =
-                                    "Open settings"
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = "Open settings"
                             )
                         }
                     }
@@ -181,91 +151,63 @@ fun CyberPulseEduApp() {
         },
 
         bottomBar = {
-
             if (showBottomBar) {
-
                 NavigationBar {
 
-                    bottomNavigationItems
-                        .forEach { item ->
+                    bottomNavigationItems.forEach { item ->
 
-                            val selected =
-                                currentDestination
-                                    ?.hierarchy
-                                    ?.any {
-                                            destination ->
+                        val selected =
+                            currentDestination
+                                ?.hierarchy
+                                ?.any { destination ->
+                                    destination.route ==
+                                            item.destination.route
+                                } == true
 
-                                        destination.route ==
-                                                item
-                                                    .destination
-                                                    .route
-                                    } == true
+                        NavigationBarItem(
+                            selected = selected,
 
-                            NavigationBarItem(
-
-                                selected =
-                                    selected,
-
-                                onClick = {
-
-                                    navController.navigate(
-                                        item
-                                            .destination
-                                            .route
+                            onClick = {
+                                navController.navigate(
+                                    item.destination.route
+                                ) {
+                                    popUpTo(
+                                        AppDestination.Home.route
                                     ) {
-
-                                        popUpTo(
-                                            AppDestination
-                                                .Home
-                                                .route
-                                        ) {
-                                            saveState =
-                                                true
-                                        }
-
-                                        launchSingleTop =
-                                            true
-
-                                        restoreState =
-                                            true
+                                        saveState = true
                                     }
-                                },
 
-                                icon = {
-
-                                    Icon(
-                                        imageVector =
-                                            item.icon,
-                                        contentDescription =
-                                            item
-                                                .destination
-                                                .title
-                                    )
-                                },
-
-                                label = {
-
-                                    Text(
-                                        text =
-                                            item
-                                                .destination
-                                                .title
-                                    )
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                            )
-                        }
+                            },
+
+                            icon = {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription =
+                                        item.destination.title
+                                )
+                            },
+
+                            label = {
+                                Text(
+                                    text =
+                                        item.destination.title
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
     ) { innerPadding ->
 
         AppNavGraph(
-            navController =
-                navController,
-            modifier =
-                Modifier.padding(
-                    innerPadding
-                )
+            navController = navController,
+            modifier = Modifier.padding(
+                innerPadding
+            )
         )
     }
 }

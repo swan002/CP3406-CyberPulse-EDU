@@ -34,9 +34,7 @@ sealed class AppDestination(
         route = "lesson/{lessonId}",
         title = "Lesson"
     ) {
-
-        const val ARG_LESSON_ID =
-            "lessonId"
+        const val ARG_LESSON_ID = "lessonId"
 
         fun createRoute(
             lessonId: Int
@@ -44,4 +42,14 @@ sealed class AppDestination(
             return "lesson/$lessonId"
         }
     }
+
+    data object QuizPlay : AppDestination(
+        route = "quiz_play",
+        title = "Quiz"
+    )
+
+    data object QuizResult : AppDestination(
+        route = "quiz_result",
+        title = "Results"
+    )
 }
