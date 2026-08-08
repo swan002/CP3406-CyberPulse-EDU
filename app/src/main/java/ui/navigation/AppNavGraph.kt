@@ -22,23 +22,44 @@ fun AppNavGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        composable(route = AppDestination.Home.route) {
-            HomeScreen()
+
+        composable(
+            route = AppDestination.Home.route
+        ) {
+            HomeScreen(
+                onLearnClick = {
+                    navController.navigate(AppDestination.Learn.route)
+                },
+                onQuizClick = {
+                    navController.navigate(AppDestination.Quiz.route)
+                },
+                onStatisticsClick = {
+                    navController.navigate(AppDestination.Statistics.route)
+                }
+            )
         }
 
-        composable(route = AppDestination.Learn.route) {
+        composable(
+            route = AppDestination.Learn.route
+        ) {
             LearnScreen()
         }
 
-        composable(route = AppDestination.Quiz.route) {
+        composable(
+            route = AppDestination.Quiz.route
+        ) {
             QuizScreen()
         }
 
-        composable(route = AppDestination.Statistics.route) {
+        composable(
+            route = AppDestination.Statistics.route
+        ) {
             StatisticsScreen()
         }
 
-        composable(route = AppDestination.Settings.route) {
+        composable(
+            route = AppDestination.Settings.route
+        ) {
             SettingsScreen()
         }
     }
