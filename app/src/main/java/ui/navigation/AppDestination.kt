@@ -4,6 +4,7 @@ sealed class AppDestination(
     val route: String,
     val title: String
 ) {
+
     data object Home : AppDestination(
         route = "home",
         title = "Home"
@@ -28,4 +29,19 @@ sealed class AppDestination(
         route = "settings",
         title = "Settings"
     )
+
+    data object LessonDetail : AppDestination(
+        route = "lesson/{lessonId}",
+        title = "Lesson"
+    ) {
+
+        const val ARG_LESSON_ID =
+            "lessonId"
+
+        fun createRoute(
+            lessonId: Int
+        ): String {
+            return "lesson/$lessonId"
+        }
+    }
 }
